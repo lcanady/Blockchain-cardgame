@@ -109,7 +109,7 @@ To keep things brief, this take-home only needs minting & balance tracking for t
 As a Unity game developer working on the GUI for the card game, I want a reliable way to visually represent a battle after it happens on-chain, to the player. (Without having to repeat any game-logic; ALL game logic exists on-chain only, and the Unity client is simply a visual way for players to interact with our contract functions)
 
 ### Acceptance Criteria
-- [ ] The `battle` function tracks data in a format to be decided by the developer that details the every ability cast, basic attack performed, death, and game-end, in order.
+- [x] The `battle` function tracks data in a format to be decided by the developer that details the every ability cast, basic attack performed, death, and game-end, in order.
   - The `battle` function logic gets updated to write into this data as the logic executes so that it can be queried later.
 - [ ] The "battle data" gets written into storage in the smart contract by a unique identifier so a Player can look up the battle again at a later date to see what happened. The unique identifier is returned from the function to be used for this purpose.
 
