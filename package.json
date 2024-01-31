@@ -1,0 +1,9 @@
+{
+  "name": "contracts",
+  "version": "1.0.0",
+  "description": "Ex Populus Blockchain Take-Home",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": "18.16.0"
+  }
+}
