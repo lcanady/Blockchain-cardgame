@@ -97,8 +97,8 @@ The game loop should have 3 main parts, abilities, basic attacks, and death hand
 As a player, when I win a battle, I want to be rewarded in the form of a fungible token.
 
 ### Acceptance Criteria
-- [ ] The ExPopulusToken contract represents a fungible token & tracks the balance of each player
-- [ ] The `mintToken` function should take an address & quantity to determine who to mint to & how many tokens.
+- [x] The ExPopulusToken contract represents a fungible token & tracks the balance of each player
+- [x] The `mintToken` function should take an address & quantity to determine who to mint to & how many tokens.
 - [ ] The `mintToken` function should only be callable by the initial deployer of the contract AND the ExPopulusCardGameLogic smart contract.
 - [ ] When a player wins a battle from User Story 3 they should be rewarded 100 fungible tokens in the ExPopulusToken contract, or 1000 tokens if their win was a multiple of 5 (5th, 10th, 15th win, etc).
 
