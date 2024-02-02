@@ -111,7 +111,7 @@ As a Unity game developer working on the GUI for the card game, I want a reliabl
 ### Acceptance Criteria
 - [x] The `battle` function tracks data in a format to be decided by the developer that details the every ability cast, basic attack performed, death, and game-end, in order.
   - The `battle` function logic gets updated to write into this data as the logic executes so that it can be queried later.
-- [ ] The "battle data" gets written into storage in the smart contract by a unique identifier so a Player can look up the battle again at a later date to see what happened. The unique identifier is returned from the function to be used for this purpose.
+- [x] The "battle data" gets written into storage in the smart contract by a unique identifier so a Player can look up the battle again at a later date to see what happened. The unique identifier is returned from the function to be used for this purpose.
 
 ### Notes
 The battle data should be easily expandable in the future, and the implementation should take into consideration that down the road, battles will get much more complex. So, if possible, try to create a solution that doesn't use tons of contract space to track this data as the battle is running.
