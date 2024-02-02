@@ -9,6 +9,7 @@ contract ExPopulusCardGameLogic is Ownable {
     event BattleStarted(
         uint256 indexed battleId,
         address indexed player,
+        uint256 timestamp,
         uint256 seq
     );
     event AbilityUsed(
@@ -63,6 +64,7 @@ contract ExPopulusCardGameLogic is Ownable {
 
     mapping(address => uint256) private winStreaks;
     mapping(uint256 => BattleStatus) private battleStatuses;
+    mapping(address => uint256) public lastBattleId;
 
     constructor(address cardsAddress) Ownable(msg.sender) {
         cardsContract = ExPopulusCards(cardsAddress);
@@ -74,7 +76,7 @@ contract ExPopulusCardGameLogic is Ownable {
      */
     function battle(
         uint256[] calldata playerCardIds
-    ) external returns (uint256) {
+    ) external returns (uint256 currentBattleId) {
         require(playerCardIds.length <= 3, "Can only use up to 3 cards");
 
         uint256 currentBattleId = battleCount++;
@@ -89,7 +91,7 @@ contract ExPopulusCardGameLogic is Ownable {
         ensureUniqueCards(playerCardIds);
         validateOwnership(playerCardIds, msg.sender);
 
-        emit BattleStarted(currentBattleId, msg.sender, seq++);
+        emit BattleStarted(currentBattleId, msg.sender, block.timestamp,seq++);
 
         executeGameLoop(status);
 
@@ -103,7 +105,7 @@ contract ExPopulusCardGameLogic is Ownable {
             emit BattleEnded(currentBattleId, address(0), status.seq++);
             delete battleStatuses[currentBattleId];
         }
-
+        lastBattleId[msg.sender] = currentBattleId;
         return currentBattleId;
     }
 
