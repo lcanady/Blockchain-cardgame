@@ -155,8 +155,7 @@ describe("Unit tests", function () {
     });
 
     it("Player can initiate a battle with up to 3 NFTs", async function () {
-      // Assume cards have been minted and owned by testAccount2
-      const playerCardIds = [0, 1, 2]; // Example card IDs owned by testAccount2
+      const playerCardIds = [0, 1, 2];
       const res = await this.contracts.exPopulusCardGameLogic.connect(
         this.signers.testAccount2,
       ).battle(playerCardIds);
@@ -295,8 +294,6 @@ describe("Unit tests", function () {
       });
 
       expect(events.length).to.be.greaterThan(0);
-
-      // if testAccount2 is the winner then check the balance.  Else
     });
     it("should give 1000 coins for wins at multiple of 5", async function () {
       const playerCardIds = [0, 1, 2];
@@ -349,12 +346,10 @@ describe("Unit tests", function () {
         this.contracts.exPopulusCardGameLogic.interface.parseLog(log)
       );
 
-      // Now you have the events and can extract the battle IDs or any other relevant information
       const participatedBattleIds = battleStartedEvents.map((event) =>
         event.args.battleId
       );
 
-      // Perform any assertions you need, for example, checking if a specific battleId is in the list
       expect(participatedBattleIds).to.include(battleId);
     });
   });
