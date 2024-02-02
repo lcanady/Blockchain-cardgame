@@ -2,8 +2,10 @@
 pragma solidity ^0.8.12;
 
 import "./ExPopulusCards.sol";
+import "./ExPopulusToken.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract ExPopulusCardGameLogic {
+contract ExPopulusCardGameLogic is Ownable {
     event BattleStarted(
         uint256 indexed battleId,
         address indexed player,
@@ -35,6 +37,8 @@ contract ExPopulusCardGameLogic {
         uint256 seq
     );
 
+    event PrizeClaimed(address indexed player, uint256 amount);
+
     struct BattleStatus {
         uint8 updatedPlayerHealth;
         uint8 updatedEnemyHealth;
@@ -54,12 +58,13 @@ contract ExPopulusCardGameLogic {
     }
 
     ExPopulusCards private cardsContract;
+    ExPopulusToken private tokenContract;
     uint256 public battleCount = 0;
 
     mapping(address => uint256) private winStreaks;
     mapping(uint256 => BattleStatus) private battleStatuses;
 
-    constructor(address cardsAddress) {
+    constructor(address cardsAddress) Ownable(msg.sender) {
         cardsContract = ExPopulusCards(cardsAddress);
     }
 
@@ -67,7 +72,9 @@ contract ExPopulusCardGameLogic {
      * @dev Starts a battle between the player and a random enemy
      * @param playerCardIds Array of card IDs
      */
-    function battle(uint256[] calldata playerCardIds) external {
+    function battle(
+        uint256[] calldata playerCardIds
+    ) external returns (uint256) {
         require(playerCardIds.length <= 3, "Can only use up to 3 cards");
 
         uint256 currentBattleId = battleCount++;
@@ -88,6 +95,7 @@ contract ExPopulusCardGameLogic {
 
         if (status.playerWins) {
             winStreaks[msg.sender]++;
+            processPrize(msg.sender);
             emit BattleEnded(currentBattleId, msg.sender, status.seq++);
             delete battleStatuses[currentBattleId];
         } else {
@@ -95,6 +103,8 @@ contract ExPopulusCardGameLogic {
             emit BattleEnded(currentBattleId, address(0), status.seq++);
             delete battleStatuses[currentBattleId];
         }
+
+        return currentBattleId;
     }
 
     /**
@@ -187,21 +197,6 @@ contract ExPopulusCardGameLogic {
                 break;
             }
         }
-    }
-
-    /**
-     * @dev Finalizes the battle
-     * @param status BattleStatus struct
-     */
-    function finalizeBattle(BattleStatus storage status) internal {
-        if (status.playerWins) {
-            winStreaks[msg.sender]++;
-            emit BattleEnded(status.currentBattleId, msg.sender, status.seq++);
-        } else {
-            winStreaks[msg.sender] = 0;
-            emit BattleEnded(status.currentBattleId, address(0), status.seq++);
-        }
-        delete battleStatuses[status.currentBattleId]; // Clean up to free storage
     }
 
     /**
@@ -399,5 +394,29 @@ contract ExPopulusCardGameLogic {
             status.playercardId = status.playerCardIds[status.playerFrontIndex];
             status.enemyCardId = status.enemyCardIds[status.enemyFrontIndex];
         }
+    }
+
+    function processPrize(address player) internal {
+        uint256 streak = winStreaks[player];
+        // if the win is a multiple of 5, 1000 tokens, else 100 tokens
+        uint256 prize = streak % 5 == 0 ? 1000 : 100;
+        tokenContract.mintToken(player, prize);
+        emit PrizeClaimed(player, prize);
+    }
+
+    /**
+     * @dev Sets the token contract address
+     * @param tokenAddress Address of the token contract
+     */
+    function setTokenAddress(address tokenAddress) external onlyOwner {
+        tokenContract = ExPopulusToken(tokenAddress);
+    }
+
+    /**
+     * @dev Sets the cards contract address
+     * @param cardsAddress Address of the cards contract
+     */
+    function setCardsAddress(address cardsAddress) external onlyOwner {
+        cardsContract = ExPopulusCards(cardsAddress);
     }
 }

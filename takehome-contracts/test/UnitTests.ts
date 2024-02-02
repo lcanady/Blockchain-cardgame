@@ -185,9 +185,41 @@ describe("Unit tests", function () {
       expect(winStreakAfter).to.equal(0);
     });
   });
-});
+  describe("User Story #4 (Fungible Token & Battle Rewards)", async function () {
+    it("Should be able to mint a fungible token to the winner of a battle", async function () {
+      const res = await this.contracts.exPopulusCardGameLogic.connect(
+        this.signers.testAccount2,
+      ).battle([0, 1, 2]);
+      console.log(
+        await this.contracts.exPopulusToken.balanceOf(
+          this.signers.testAccount2.address,
+        ),
+      );
 
-describe("User Story #4 (Fungible Token & Battle Rewards)", async function () {
+      console.log(
+        await this.contracts.exPopulusCardGameLogic.getWinStreak(
+          this.signers.testAccount2.address,
+        ),
+      );
+
+      if (
+        +(await this.contracts.exPopulusCardGameLogic.getWinStreak(
+          this.signers.testAccount2.address,
+        ))
+      ) {
+        const balance = await this.contracts.exPopulusToken.balanceOf(
+          this.signers.testAccount2.address,
+        );
+
+        expect(balance.toNumber()).to.be.greaterThanOrEqual(100);
+      } else {
+        const balance = await this.contracts.exPopulusToken.balanceOf(
+          this.signers.testAccount2.address,
+        );
+        expect(balance.toNumber()).to.be.lessThanOrEqual(100);
+      }
+    });
+  });
 });
 
 describe("User Story #5 (Battle Logs & Historical Lookup)", async function () {

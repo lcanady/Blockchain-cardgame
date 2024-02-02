@@ -9,7 +9,9 @@ contract ExPopulusToken is ERC20, Ownable, ERC20Permit {
 
     constructor(
         address _initialMinter
-    ) ERC20("ExToken", "XTK") Ownable(_msgSender()) ERC20Permit("ExToken") {}
+    ) ERC20("ExToken", "XTK") Ownable(_msgSender()) ERC20Permit("ExToken") {
+        initialMinter = _initialMinter;
+    }
 
     modifier onlyMinter() {
         require(
