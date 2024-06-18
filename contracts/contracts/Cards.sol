@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Royalty.sol";
 
-contract ExPopulusCards is
+contract Cards is
     ERC721,
     AccessControl,
     ERC721Enumerable,
@@ -48,7 +48,7 @@ contract ExPopulusCards is
     string private _baseTokenURI;
     bytes32 public constant MINTING_ROLE = keccak256("MINTING_ROLE");
 
-    constructor() ERC721("ExPopulusCards", "EPC") {
+    constructor() ERC721("GameCards", "GC") {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(MINTING_ROLE, msg.sender);
         _baseTokenURI = "https://example.com/";

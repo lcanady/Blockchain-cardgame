@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.12;
 
-import "./ExPopulusCards.sol";
-import "./ExPopulusToken.sol";
+import "./Cards.sol";
+import "./Token.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract ExPopulusCardGameLogic is Ownable {
+contract CardGameLogic is Ownable {
     event BattleStarted(
         uint256 indexed battleId,
         address indexed player,
@@ -58,8 +58,8 @@ contract ExPopulusCardGameLogic is Ownable {
         uint256 seq;
     }
 
-    ExPopulusCards private cardsContract;
-    ExPopulusToken private tokenContract;
+    Cards private cardsContract;
+    Token private tokenContract;
     uint256 public battleCount = 0;
 
     mapping(address => uint256) private winStreaks;
@@ -67,7 +67,7 @@ contract ExPopulusCardGameLogic is Ownable {
     mapping(address => uint256) public lastBattleId;
 
     constructor(address cardsAddress) Ownable(msg.sender) {
-        cardsContract = ExPopulusCards(cardsAddress);
+        cardsContract = Cards(cardsAddress);
     }
 
     /**
@@ -76,7 +76,7 @@ contract ExPopulusCardGameLogic is Ownable {
      */
     function battle(
         uint256[] calldata playerCardIds
-    ) external returns (uint256 currentBattleId) {
+    ) external returns (uint256) {
         require(playerCardIds.length <= 3, "Can only use up to 3 cards");
 
         uint256 currentBattleId = battleCount++;
@@ -411,7 +411,7 @@ contract ExPopulusCardGameLogic is Ownable {
      * @param tokenAddress Address of the token contract
      */
     function setTokenAddress(address tokenAddress) external onlyOwner {
-        tokenContract = ExPopulusToken(tokenAddress);
+        tokenContract = Token(tokenAddress);
     }
 
     /**
@@ -419,6 +419,6 @@ contract ExPopulusCardGameLogic is Ownable {
      * @param cardsAddress Address of the cards contract
      */
     function setCardsAddress(address cardsAddress) external onlyOwner {
-        cardsContract = ExPopulusCards(cardsAddress);
+        cardsContract = Cards(cardsAddress);
     }
 }

@@ -4,12 +4,12 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
 
-contract ExPopulusToken is ERC20, Ownable, ERC20Permit {
+contract Token is ERC20, Ownable, ERC20Permit {
     address public initialMinter;
 
     constructor(
         address _initialMinter
-    ) ERC20("ExToken", "XTK") Ownable(_msgSender()) ERC20Permit("ExToken") {
+    ) ERC20("GameToken", "GTK") Ownable(_msgSender()) ERC20Permit("GameToken") {
         initialMinter = _initialMinter;
     }
 
